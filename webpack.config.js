@@ -1,11 +1,16 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const Path = require('path');
 
 const outPath = Path.resolve(__dirname, 'dist');
 const sourcePath = Path.resolve(__dirname, 'src');
+const extractSass = new ExtractTextPlugin({
+    filename: "[name].css",
+    disable: process.env.NODE_ENV === "development"
+});
 
 module.exports = {
-    entry: "./src/index.tsx",
+    entry: "./src",
     output: {
         filename: "bundle.js",
         path: outPath
@@ -15,17 +20,27 @@ module.exports = {
     devtool: "source-map",
 
     resolve: {
-        // Add '.ts' and '.tsx' as resolvable extensions.
         extensions: [".ts", ".tsx", ".js", ".json"]
     },
 
     module: {
         rules: [
-            // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
             { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
 
-            // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
+
+            //{ test: /\.css?$/, loaders: ExtractTextPlugin.extract("css-loader") }
+
+            { test: /\.scss?$/, use: extractSass.extract({
+                    use: [{
+                        loader: "css-loader"
+                    }, {
+                        loader: "sass-loader"
+                    }],
+                    // use style-loader in development
+                    fallback: "style-loader"
+                })
+            }
         ]
     },
 
@@ -34,7 +49,9 @@ module.exports = {
             { from: "./src/index.html" },
             { from: "./node_modules/react/umd/react.development.js" },
             { from: "./node_modules/react-dom/umd/react-dom.development.js" }
-        ])
+        ]),
+        new ExtractTextPlugin("styles.css"),
+        extractSass
     ],
 
     // When importing a module whose path matches one of the following, just

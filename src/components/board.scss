@@ -1,0 +1,56 @@
+$thin-border: thin solid black;
+
+.square {
+    background-color: white;
+    width: 160px;
+    height: 160px;
+}
+
+.inner-square {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.1s;
+}
+
+.highlighted .inner-square {
+    opacity: 1;
+    background-color: cadetblue;
+}
+
+.square-0 {
+    border-right: $thin-border;
+    border-bottom: $thin-border;
+}
+
+.square-1 {
+    border-bottom: $thin-border;
+}
+
+.square-2 {
+    border-left: $thin-border;
+    border-bottom: $thin-border;
+}
+
+.square-4 {
+    border-left: $thin-border;
+    border-right: $thin-border;
+}
+
+.square-6 {
+    border-top: $thin-border;
+    border-right: $thin-border;
+}
+
+.square-7 {
+    border-top: $thin-border;
+}
+
+.square-8 {
+    border-top: $thin-border;
+    border-left: $thin-border;
+}
+
+.row {
+    display: flex;
+}
