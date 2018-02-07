@@ -1,21 +1,26 @@
 import { GameHistory } from "./gameHistory";
-import { BoardState } from "./boardState";
-import { PlayerChoice } from "./playerChoice";
-import { UserInput } from "./userInput";
+import { BoardState } from "./valueObjects/boardState";
+import { Match } from "./match";
+import { UserInput } from "./enums/userInput";
+import { Board } from "../components/Board";
 
 export class Game {
 
-    private readonly START_DELAY:number = 1000;
+    private readonly displayResultDelay:number = 500;
     private readonly letters:string = "abcdefghijklmnopqrstuvwxyz";
 
     private n:number;
     private gameHistory:GameHistory;
     private gameLength:number;
     private intervalLength:number;
-    private audioChoice:boolean = false;
-    private locationChoice:boolean = false;
+
+    private isGameInProgress:boolean = false;
+    private playerChoice:Match;
     private _currentState:BoardState;
+    private _currentMatch:Match;
+
     private onStateChanged:(BoardState) => void;
+    private onPlayerChoiceValidated:(Match) => void;
 
     get currentState() {
         return this._currentState;
@@ -27,68 +32,96 @@ export class Game {
         this.gameHistory.addState(newState);
     }
 
+    get currentMatch() {
+        return this._currentMatch;
+    }
+
+    set currentMatch(match:Match) {
+        this._currentMatch = match;
+        this.onPlayerChoiceValidated(match);
+        this.gameHistory.addMatch(match);
+    }
+
     public constructor(n:number,
             gameLength:number,
             intervalLength:number,
             onStateChanged:(BoardState) => void,
-            onPlayerChoiceValidated:(PlayerChoice) => void)
+            onPlayerChoiceValidated:(Match) => void)
     {
         this.n = n;
         this.gameHistory = new GameHistory();
         this.gameLength = gameLength;
         this.intervalLength = intervalLength;
         this.onStateChanged = onStateChanged;
+        this.onPlayerChoiceValidated = onPlayerChoiceValidated;
     }
 
-    public start() {
-        this.reset();
-        setTimeout(() => {
-            this.currentState = this.generateState();
-        }, 1000);
+    public async start() {
+        if (this.isGameInProgress)
+            return;
+
+        this.isGameInProgress = true;
+        this.resetChoice();
+        this.gameHistory.reset();
+
+        await this.delay(this.intervalLength).then(() => { this.currentState = this.generateState(); });
 
         let count = 1;
-        let timer = setInterval(() => {
-            if (count++ < this.gameLength) {
-                this.processChoice();
-                this.currentState = this.generateState();
-            }
-            else {
-                clearInterval(timer);
-                console.log(this.gameHistory.boardStates);
-                console.log(this.gameHistory.playerChoices);
-            }
-        }, this.intervalLength);
+        while (count++ < this.gameLength) {
+            await this.delay(this.intervalLength).then(() => { this.processChoice(); });
+            await this.delay(this.displayResultDelay).then(() => { this.currentState = this.generateState(); });
+        }
+        this.processChoice();
+        this.isGameInProgress = false;
     }
 
-    public addUserInput(input:UserInput) {
-        console.log("addUserInput: ", input);
+    public addChoice(input:UserInput) {
         if (this.gameHistory.boardStates.length < 1 || this.gameHistory.boardStates.length >= this.gameLength)
             return;
 
-        if (input == UserInput.Audio)
-            this.audioChoice = true;
-        if (input == UserInput.Location)
-            this.locationChoice = true;
+        if (this.playerChoice == null)
+            this.playerChoice = new Match(false, false);
+
+        if (input == UserInput.Audio && !this.playerChoice.soundMatch)
+            this.playerChoice.soundMatch = true;
+        if (input == UserInput.Location && !this.playerChoice.positionMatch)
+            this.playerChoice.positionMatch = true;
+    }
+
+    private delay<T>(millis: number): Promise<T> {
+        return new Promise((resolve) => setTimeout(() => { resolve(); }, millis));
     }
 
     private processChoice() {
-        console.log("processChoice: ", this.locationChoice, this.audioChoice);
-        this.gameHistory.addChoice(new PlayerChoice(this.locationChoice, this.audioChoice));
+        
+        if (this.playerChoice == null)
+            this.playerChoice = new Match(false, false);
+        this.gameHistory.addChoice(this.playerChoice);
+        this.validateChoice();
         this.resetChoice();
+    }
+
+    private validateChoice():any {
+        let audioMatch = false, positionMatch = false;
+        if (this.gameHistory.boardStates.length <= this.n) {
+            positionMatch = !this.playerChoice.positionMatch;
+            audioMatch = !this.playerChoice.soundMatch;
+            this.currentMatch = new Match(positionMatch, audioMatch);
+        } else {
+            let currentIndex = this.gameHistory.boardStates.length - 1;
+            positionMatch = this.playerChoice.positionMatch === 
+                (this.gameHistory.boardStates[currentIndex].squareIndex === this.gameHistory.boardStates[currentIndex - this.n].squareIndex);
+            audioMatch = this.playerChoice.soundMatch ===
+                (this.gameHistory.boardStates[currentIndex].symbol === this.gameHistory.boardStates[currentIndex - this.n].symbol);
+            this.currentMatch = new Match(positionMatch, audioMatch);
+        }
     }
 
     private resetChoice() {
-        console.log("resetChoice");
-        this.audioChoice = false;
-        this.locationChoice = false;
+        this.playerChoice = null;
     }
 
-    private reset() {
-        this.resetChoice();
-        this.gameHistory.reset();
-    }
-
-    private generateState():BoardState {
+    private generateState = () => {
         return new BoardState(this.getRandomPosition(), this.getRandomSymbol());
     }
 

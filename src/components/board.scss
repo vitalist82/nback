@@ -10,12 +10,12 @@ $thin-border: thin solid black;
     width: 100%;
     height: 100%;
     opacity: 0;
-    transition: opacity 0.5s ease 0.1s;
+    transition: opacity .5s ease-in-out;
+    background-color: cadetblue;
 }
 
 .highlighted .inner-square {
     opacity: 1;
-    background-color: cadetblue;
 }
 
 .square-0 {

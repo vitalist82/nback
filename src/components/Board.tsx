@@ -4,6 +4,7 @@ import  "./board.scss";
 import { BoardSquare } from "./BoardSquare";
 
 export class Board extends React.Component<IBoardProps, any> {
+    
     render() {
         return(
             <div className={'board'}>
