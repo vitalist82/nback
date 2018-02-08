@@ -7,7 +7,7 @@ import { Board } from "../components/Board";
 export class Game {
 
     private readonly displayResultDelay:number = 500;
-    private readonly letters:string = "abcdefghijklmnopqrstuvwxyz";
+    private readonly letters:string = "chklqrst";
 
     private n:number;
     private gameHistory:GameHistory;
@@ -88,8 +88,8 @@ export class Game {
             this.playerChoice.positionMatch = true;
     }
 
-    private delay<T>(millis: number): Promise<T> {
-        return new Promise((resolve) => setTimeout(() => { resolve(); }, millis));
+    private delay(milliseconds: number): Promise<void> {
+        return new Promise((resolve) => setTimeout(() => { resolve(); }, milliseconds));
     }
 
     private processChoice() {

@@ -21,6 +21,7 @@
   "dependencies": {
     "@types/react": "^16.0.35",
     "@types/react-dom": "^16.0.3",
+    "howler": "^2.0.8",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
