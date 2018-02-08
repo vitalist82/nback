@@ -1,4 +1,4 @@
-import { BoardState } from "./valueObjects/boardState";
+import { BoardState } from "../valueObjects/boardState";
 import { Match } from "./match";
 
 export class GameHistory {

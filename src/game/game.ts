@@ -1,7 +1,7 @@
 import { GameHistory } from "./gameHistory";
-import { BoardState } from "./valueObjects/boardState";
+import { BoardState } from "../valueObjects/boardState";
 import { Match } from "./match";
-import { UserInput } from "./enums/userInput";
+import { UserInput } from "../enums/userInput";
 import { Board } from "../components/Board";
 
 export class Game {

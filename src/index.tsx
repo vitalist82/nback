@@ -5,9 +5,9 @@ import  "./index.scss";
 
 import { Board } from "./components/Board";
 import { Game } from "./game/game";
-import { BoardState } from "./game/valueObjects/boardState";
+import { BoardState } from "./valueObjects/boardState";
 import { Match } from "./game/match";
-import { UserInput } from "./game/enums/userInput";
+import { UserInput } from "./enums/userInput";
 
 export class Root extends React.Component<any, IRootState> {
 
