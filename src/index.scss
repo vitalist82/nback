@@ -1,0 +1,16 @@
+.label-match {
+    font-size: x-large;
+    margin: 10px;
+    display: inline-block;
+    color: black;
+}
+
+.result.highlighted {
+    .label-match.highlight-error {
+        color: red;
+    }
+
+    .label-match.highlight-success {
+        color: green;
+    }
+}
