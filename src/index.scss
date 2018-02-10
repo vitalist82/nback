@@ -1,16 +1,27 @@
-.label-match {
-    font-size: x-large;
+.button-match {
+    width: 200px;
+    height: 40px;
+    border: 1px solid black;
     margin: 10px;
     display: inline-block;
     color: black;
+    font-size: x-large;
+
+    .label {
+        padding: 6px;
+    }
 }
 
-.result.highlighted {
-    .label-match.highlight-error {
+.result {
+    .button-match.error {
         color: red;
     }
 
-    .label-match.highlight-success {
+    .button-match.success {
         color: green;
+    }
+
+    .button-match.pressed {
+        background-color: grey;
     }
 }

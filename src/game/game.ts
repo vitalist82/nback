@@ -7,12 +7,12 @@ import { Board } from "../components/Board";
 export class Game {
 
     private readonly displayResultDelay:number = 500;
-    private readonly letters:string = "chklqrst";
 
     private n:number;
     private gameHistory:GameHistory;
     private gameLength:number;
     private intervalLength:number;
+    private symbols:Array<string>;
 
     private isGameInProgress:boolean = false;
     private playerChoice:Match;
@@ -21,6 +21,7 @@ export class Game {
 
     private onStateChanged:(BoardState) => void;
     private onPlayerChoiceValidated:(Match) => void;
+    private onGameEnded:() => void;
 
     get currentState() {
         return this._currentState;
@@ -45,15 +46,19 @@ export class Game {
     public constructor(n:number,
             gameLength:number,
             intervalLength:number,
+            symbols:Array<string>,
             onStateChanged:(BoardState) => void,
-            onPlayerChoiceValidated:(Match) => void)
+            onPlayerChoiceValidated:(Match) => void,
+            onGameEnded:() => void)
     {
         this.n = n;
         this.gameHistory = new GameHistory();
         this.gameLength = gameLength;
         this.intervalLength = intervalLength;
+        this.symbols = symbols;
         this.onStateChanged = onStateChanged;
         this.onPlayerChoiceValidated = onPlayerChoiceValidated;
+        this.onGameEnded = onGameEnded;
     }
 
     public async start() {
@@ -73,10 +78,13 @@ export class Game {
         }
         this.processChoice();
         this.isGameInProgress = false;
+        this.onGameEnded();
     }
 
     public addChoice(input:UserInput) {
-        if (this.gameHistory.boardStates.length < 1 || this.gameHistory.boardStates.length >= this.gameLength)
+        if (!this.isGameInProgress
+            || this.gameHistory.boardStates.length < 1
+            || this.gameHistory.boardStates.length >= this.gameLength)
             return;
 
         if (this.playerChoice == null)
@@ -84,7 +92,7 @@ export class Game {
 
         if (input == UserInput.Audio && !this.playerChoice.soundMatch)
             this.playerChoice.soundMatch = true;
-        if (input == UserInput.Location && !this.playerChoice.positionMatch)
+        if (input == UserInput.Position && !this.playerChoice.positionMatch)
             this.playerChoice.positionMatch = true;
     }
 
@@ -130,6 +138,6 @@ export class Game {
     }
 
     private getRandomSymbol():string {
-        return this.letters.charAt(Math.floor(Math.random() * this.letters.length));
+        return this.symbols[(Math.floor(Math.random() * this.symbols.length))];
     }
 }

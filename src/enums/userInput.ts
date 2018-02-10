@@ -1,4 +1,4 @@
 export enum UserInput {
-    Location,
+    Position,
     Audio
 }
