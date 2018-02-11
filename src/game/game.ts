@@ -3,6 +3,7 @@ import { BoardState } from "../valueObjects/boardState";
 import { Match } from "./match";
 import { UserInput } from "../enums/userInput";
 import { Board } from "../components/Board";
+import { GameResult } from "../valueObjects/gameResult";
 
 export class Game {
 
@@ -21,7 +22,7 @@ export class Game {
 
     private onStateChanged:(BoardState) => void;
     private onPlayerChoiceValidated:(Match) => void;
-    private onGameEnded:() => void;
+    private onGameEnded:(GameResult) => void;
 
     get currentState() {
         return this._currentState;
@@ -49,7 +50,7 @@ export class Game {
             symbols:Array<string>,
             onStateChanged:(BoardState) => void,
             onPlayerChoiceValidated:(Match) => void,
-            onGameEnded:() => void)
+            onGameEnded:(GameResult) => void)
     {
         this.n = n;
         this.gameHistory = new GameHistory();
@@ -78,7 +79,7 @@ export class Game {
         }
         this.processChoice();
         this.isGameInProgress = false;
-        this.onGameEnded();
+        this.onGameEnded(this.getGameResult());
     }
 
     public addChoice(input:UserInput) {
@@ -123,6 +124,26 @@ export class Game {
                 (this.gameHistory.boardStates[currentIndex].symbol === this.gameHistory.boardStates[currentIndex - this.n].symbol);
             this.currentMatch = new Match(positionMatch, audioMatch);
         }
+    }
+
+    private getGameResult():GameResult {
+        let audioMatches:number = 0;
+        let positionMatches:number = 0;
+        let allMatches:number = 0;
+        for (let match of this.gameHistory.matches) {
+            if (match.soundMatch) {
+                audioMatches++;
+                allMatches++;
+            }
+            if (match.positionMatch) {
+                positionMatches++;
+                allMatches++;
+            }
+        }
+        return new GameResult(
+            Math.round(audioMatches / this.gameLength * 1000) / 10,
+            Math.round(positionMatches / this.gameLength * 1000) / 10,
+            Math.round(allMatches / this.gameLength / 2 * 1000) / 10);
     }
 
     private resetChoice() {

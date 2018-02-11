@@ -1,0 +1,36 @@
+.n-selector {
+    display: flex;
+    width: 125px;
+    font-size: 30px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .n-selector-btn {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        padding: 5px;
+        flex-grow: 0;
+
+        .n-selector-btn-img {
+            width: 80%;
+            height: 80%;
+            background-size: cover;
+
+            &.minus {
+                background-image: url('/media/icons/minus.svg');
+            }
+
+            &.plus {
+                background-image: url('/media/icons/plus.svg');
+            }
+        }
+    }
+
+    .n-selector-label {
+        width: 30px;
+        height: 30px;
+        flex-grow: 1;
+        text-align: center;
+    }
+}

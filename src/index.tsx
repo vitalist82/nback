@@ -9,8 +9,12 @@ import { BoardState } from "./valueObjects/boardState";
 import { Match } from "./game/match";
 import { UserInput } from "./enums/userInput";
 import { Speech } from "./speech/speech";
-import { Button } from "./components/Button";
+import { ResultButton } from "./components/ResultButton";
 import { ButtonState } from "./enums/buttonState";
+import { NumberSelector } from "./components/NumberSelector";
+import { Header } from "./components/Header";
+import { ResultPanel } from "./components/ResultPanel";
+import { GameResult } from "./valueObjects/gameResult";
 
 export class Root extends React.Component<any, IRootState> {
 
@@ -23,10 +27,13 @@ export class Root extends React.Component<any, IRootState> {
 
     constructor(props: any) {
         super(props);
-        this.state = { isGameInProgress: false, highlightedSquareIndex: -1, audioButtonState: ButtonState.None, positionButtonState: ButtonState.None };
+        this.state = { isGameInProgress: false,
+            highlightedSquareIndex: -1,
+            audioButtonState: ButtonState.None,
+            positionButtonState: ButtonState.None,
+            currentN: 2,
+            gameResult: null };
         document.addEventListener("keydown", this.onKeyDown);
-        this.speech = new Speech(this.letters);
-        this.game = new Game(2, 20, 3000, this.letters, this.onBoardStateChange, this.onPlayerChoiceValidated, this.onGameEnded);
     }
 
     public static init() {
@@ -39,13 +46,26 @@ export class Root extends React.Component<any, IRootState> {
     render() {
         return (
             <div className={'root'}>
-                <Board highlightedSquareIndex={ this.state.highlightedSquareIndex }></Board>
-                <div className={'result'}>
-                    <Button buttonState={this.state.positionButtonState} label='A: Position match' />
-                    <Button buttonState={this.state.audioButtonState} label='L: Audio match' />
+                <Header title={'Dual N-back'} />
+                <NumberSelector selectedNumber={this.state.currentN} onSelectedNumberChange={this.onCurrentNChange} isDisabled={this.state.isGameInProgress} />
+                <Board highlightedSquareIndex={this.state.highlightedSquareIndex}></Board>
+                <div className={'result-buttons'}>
+                    <ResultButton buttonState={this.state.positionButtonState} label='A: Position match' />
+                    <ResultButton buttonState={this.state.audioButtonState} label='L: Audio match' />
                 </div>
+                {!this.state.isGameInProgress && this.state.gameResult != null &&
+                    <ResultPanel result={this.state.gameResult} />
+                }
+                <div className={`overlay ${this.state.isGameInProgress ? 'hidden' : 'visible'}`}>Press space to start new game</div>
             </div>
         );
+    }
+
+    private startGame() {
+        this.speech = new Speech(this.letters);
+        this.game = new Game(this.state.currentN, 24, 3000, this.letters, this.onBoardStateChange, this.onPlayerChoiceValidated, this.onGameEnded);
+        this.game.start();
+        this.setState({ isGameInProgress: true });
     }
 
     private setAudioButtonState(buttonState:ButtonState) {
@@ -54,6 +74,10 @@ export class Root extends React.Component<any, IRootState> {
 
     private setPositionButtonState(buttonState:ButtonState) {
         this.setState({ positionButtonState: buttonState });
+    }
+
+    onCurrentNChange = (currentN:number) => {
+        this.setState({ currentN: currentN });
     }
 
     onBoardStateChange = (boardState:BoardState) => {
@@ -68,8 +92,8 @@ export class Root extends React.Component<any, IRootState> {
             setTimeout(() => { this.setAudioButtonState(ButtonState.None); this.setPositionButtonState(ButtonState.None) }, this.highlightResultMs);
     }
 
-    onGameEnded = () => {
-        this.setState({ isGameInProgress: false });
+    onGameEnded = (gameResult:GameResult) => {
+        this.setState({ isGameInProgress: false, gameResult: gameResult });
     }
 
     onKeyDown = (e:KeyboardEvent) => {
@@ -82,8 +106,7 @@ export class Root extends React.Component<any, IRootState> {
             this.setPositionButtonState(ButtonState.Pressed);
         }
         else if (!this.state.isGameInProgress && (e.key == ' ' || e.key == 'Spacebar')) {
-            this.game.start();
-            this.setState({ isGameInProgress: true });
+            this.startGame();
         }
     }
 }
@@ -97,4 +120,6 @@ export interface IRootState {
     highlightedSquareIndex:number;
     audioButtonState:ButtonState;
     positionButtonState:ButtonState;
+    currentN:number;
+    gameResult:GameResult;
 }

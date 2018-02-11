@@ -5,7 +5,7 @@ $thin-border: thin solid #555555;
     margin-right: auto;
     margin-top: 30px;
     margin-bottom: 30px;
-    width: 40%;
+    width: 484px;
     min-width: 484px;
 }
 
@@ -27,37 +27,17 @@ $thin-border: thin solid #555555;
     opacity: 1;
 }
 
-.square-0 {
+.square-0, .square-1, .square-3, .square-4 {
     border-right: $thin-border;
     border-bottom: $thin-border;
 }
 
-.square-1 {
+.square-2, .square-5 {
     border-bottom: $thin-border;
 }
 
-.square-2 {
-    border-left: $thin-border;
-    border-bottom: $thin-border;
-}
-
-.square-4 {
-    border-left: $thin-border;
+.square-6, .square-7 {
     border-right: $thin-border;
-}
-
-.square-6 {
-    border-top: $thin-border;
-    border-right: $thin-border;
-}
-
-.square-7 {
-    border-top: $thin-border;
-}
-
-.square-8 {
-    border-top: $thin-border;
-    border-left: $thin-border;
 }
 
 .row {

@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { ButtonState } from "../enums/buttonState";
 
-export class Button extends React.Component<IButtonProps, any> {
+export class ResultButton extends React.Component<IButtonProps, any> {
     
     render() {
         return (

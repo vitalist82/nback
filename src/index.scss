@@ -1,7 +1,11 @@
+body {
+    margin: 0;
+}
+
 .button-match {
     width: 217px;
     height: 40px;
-    border: thin solid #555555;
+    border: thin solid #bbbbbb;
     margin: 10px;
     display: inline-block;
     color: #555555;
@@ -13,9 +17,9 @@
     }
 }
 
-.result {
+.result-buttons {
     margin: auto;
-    width: 40%;
+    width: 480px;
 
     .button-match.error {
         color: red;
@@ -26,6 +30,21 @@
     }
 
     .button-match.pressed {
-        background-color: grey;
+        background-color: #bbbbbb;
+        color: #eeeeee;
+    }
+}
+
+.overlay {
+    position: absolute;
+    top: 365px;
+    left: 36%;
+    text-align: center;
+    font-size: 35px;
+    color: #555555;
+    text-shadow: grey -2px 2px 2px;
+
+    &.hidden {
+        visibility: hidden;
     }
 }
