@@ -1,18 +1,22 @@
 .button-match {
-    width: 200px;
+    width: 217px;
     height: 40px;
-    border: 1px solid black;
+    border: thin solid #555555;
     margin: 10px;
     display: inline-block;
-    color: black;
+    color: #555555;
     font-size: x-large;
 
     .label {
         padding: 6px;
+        text-align: center;
     }
 }
 
 .result {
+    margin: auto;
+    width: 40%;
+
     .button-match.error {
         color: red;
     }

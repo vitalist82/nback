@@ -81,7 +81,7 @@ export class Root extends React.Component<any, IRootState> {
             this.game.addChoice(UserInput.Position);
             this.setPositionButtonState(ButtonState.Pressed);
         }
-        else if (!this.state.isGameInProgress && e.key == ' ') {
+        else if (!this.state.isGameInProgress && (e.key == ' ' || e.key == 'Spacebar')) {
             this.game.start();
             this.setState({ isGameInProgress: true });
         }

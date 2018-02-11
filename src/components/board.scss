@@ -1,4 +1,13 @@
-$thin-border: thin solid black;
+$thin-border: thin solid #555555;
+
+.board {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    width: 40%;
+    min-width: 484px;
+}
 
 .square {
     background-color: white;

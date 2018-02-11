@@ -10,7 +10,7 @@ const extractSass = new ExtractTextPlugin({
 });
 
 module.exports = {
-    entry: "./src",
+    entry: ["core-js/fn/promise", "./src"],
     output: {
         filename: "bundle.js",
         path: outPath

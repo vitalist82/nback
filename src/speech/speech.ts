@@ -17,7 +17,7 @@ export class Speech {
         this.sounds = new Map<string, Howl>();
         for (const letter of letters) {
             this.sounds.set(letter, new Howl({
-                src: this.pathToLetterSounds + letter + '.mp3'
+                src: [ this.pathToLetterSounds + letter + '.wav', this.pathToLetterSounds + letter + '.mp3' ]
             }));
         }
     }
