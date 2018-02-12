@@ -5,6 +5,9 @@ import "./resultPanel.scss";
 import { GameResult } from "../valueObjects/gameResult";
 
 export const ResultPanel: React.SFC<IResultPanelProps> = (props) => {
+    if (props.result == null)
+        return null;
+    
     return(
         <div className={'result-panel'}>
             <div className={'audio'}>

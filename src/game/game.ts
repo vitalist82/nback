@@ -70,14 +70,14 @@ export class Game {
         this.resetChoice();
         this.gameHistory.reset();
 
-        await this.delay(this.intervalLength).then(() => { this.currentState = this.generateState(); });
+        await this.executeDelayed(this.displayResultDelay, this.generateState);
 
         let count = 1;
         while (count++ < this.gameLength) {
-            await this.delay(this.intervalLength).then(() => { this.processChoice(); });
-            await this.delay(this.displayResultDelay).then(() => { this.currentState = this.generateState(); });
+            await this.executeDelayed(this.intervalLength, this.processChoice);
+            await this.executeDelayed(this.displayResultDelay, this.generateState);
         }
-        this.processChoice();
+        await this.executeDelayed(this.intervalLength, this.processChoice);
         this.isGameInProgress = false;
         this.onGameEnded(this.getGameResult());
     }
@@ -97,11 +97,15 @@ export class Game {
             this.playerChoice.positionMatch = true;
     }
 
+    private async executeDelayed(delayMs:number, fn:() => void) {
+        await this.delay(delayMs).then(fn);
+    }
+
     private delay(milliseconds: number): Promise<void> {
         return new Promise((resolve) => setTimeout(() => { resolve(); }, milliseconds));
     }
 
-    private processChoice() {
+    private processChoice = () => {
         
         if (this.playerChoice == null)
             this.playerChoice = new Match(false, false);
@@ -151,7 +155,7 @@ export class Game {
     }
 
     private generateState = () => {
-        return new BoardState(this.getRandomPosition(), this.getRandomSymbol());
+        this.currentState = new BoardState(this.getRandomPosition(), this.getRandomSymbol());
     }
 
     private getRandomPosition():number {

@@ -1,16 +1,21 @@
 .n-selector {
     display: flex;
-    width: 125px;
-    font-size: 30px;
+    width: 215px;
+    font-size: 24px;
     margin-left: auto;
     margin-right: auto;
+
+    .n-selector-label {
+        height: 30px;
+        margin-right: 20px;
+        text-align: center;
+    }
 
     .n-selector-btn {
         width: 30px;
         height: 30px;
         cursor: pointer;
-        padding: 5px;
-        flex-grow: 0;
+        padding: 3px;
 
         .n-selector-btn-img {
             width: 80%;
@@ -27,10 +32,9 @@
         }
     }
 
-    .n-selector-label {
+    .n-selector-number-label {
         width: 30px;
         height: 30px;
-        flex-grow: 1;
         text-align: center;
     }
 }

@@ -29,15 +29,16 @@ export class NumberSelector extends React.Component<INumberSelectorProps, any> {
     render() {
         return (
             <div className={'n-selector'}>
+                <div className={'n-selector-label'}>Select n: </div>
                 <div className={'n-selector-btn'} onClick={this.onMinusClick}><div className={'n-selector-btn-img minus'}></div></div>
-                <div className={'n-selector-label'}>{this.state.selectedNumber}</div>
+                <div className={'n-selector-number-label'}>{this.state.selectedNumber}</div>
                 <div className={'n-selector-btn'} onClick={this.onPlusClick}><div className={'n-selector-btn-img plus'}></div></div>
             </div>
         );
     }
 
     onMinusClick = () => {
-        if (!this.props.isDisabled)
+        if (!this.props.isDisabled && this.selectedNumber > 1)
             this.selectedNumber--;
     }
 

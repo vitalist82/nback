@@ -46,17 +46,23 @@ export class Root extends React.Component<any, IRootState> {
     render() {
         return (
             <div className={'root'}>
-                <Header title={'Dual N-back'} />
-                <NumberSelector selectedNumber={this.state.currentN} onSelectedNumberChange={this.onCurrentNChange} isDisabled={this.state.isGameInProgress} />
+                { !this.state.isGameInProgress &&
+                    <Header title={'Dual n-back'} />
+                }
+                { !this.state.isGameInProgress &&
+                    <NumberSelector selectedNumber={this.state.currentN} onSelectedNumberChange={this.onCurrentNChange} isDisabled={this.state.isGameInProgress} />
+                }
                 <Board highlightedSquareIndex={this.state.highlightedSquareIndex}></Board>
                 <div className={'result-buttons'}>
                     <ResultButton buttonState={this.state.positionButtonState} label='A: Position match' />
                     <ResultButton buttonState={this.state.audioButtonState} label='L: Audio match' />
                 </div>
-                {!this.state.isGameInProgress && this.state.gameResult != null &&
+                { this.displayResult() &&
                     <ResultPanel result={this.state.gameResult} />
                 }
-                <div className={`overlay ${this.state.isGameInProgress ? 'hidden' : 'visible'}`}>Press space to start new game</div>
+                { !this.state.isGameInProgress &&
+                    <div className={'overlay'}>Press space to start new game</div>
+                }
             </div>
         );
     }
@@ -74,6 +80,10 @@ export class Root extends React.Component<any, IRootState> {
 
     private setPositionButtonState(buttonState:ButtonState) {
         this.setState({ positionButtonState: buttonState });
+    }
+
+    private displayResult():boolean {
+        return !this.state.isGameInProgress && this.state.gameResult != null;
     }
 
     onCurrentNChange = (currentN:number) => {
