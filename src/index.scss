@@ -36,9 +36,8 @@ body {
 }
 
 .overlay {
-    position: absolute;
-    top: 365px;
-    left: 36%;
+    position: relative;
+    bottom: 50vh;
     text-align: center;
     font-size: 35px;
     color: #555555;
