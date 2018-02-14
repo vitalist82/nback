@@ -22,14 +22,14 @@ export class NumberSelector extends React.Component<INumberSelectorProps, any> {
 
     public constructor(props:any) {
         super(props);
-        this.state = { selectedNumber: props.selectedNumber };
-        this._selectedNumber = props.selectedNumber;
+        this.state = { selectedNumber: props.defaultValue };
+        this._selectedNumber = props.defaultValue;
     }
 
     render() {
         return (
             <div className={'n-selector'}>
-                <div className={'n-selector-label'}>Select n: </div>
+                <div className={'n-selector-label'}>{this.props.label}</div>
                 <div className={'n-selector-btn'} onClick={this.onMinusClick}><div className={'n-selector-btn-img minus'}></div></div>
                 <div className={'n-selector-number-label'}>{this.state.selectedNumber}</div>
                 <div className={'n-selector-btn'} onClick={this.onPlusClick}><div className={'n-selector-btn-img plus'}></div></div>
@@ -38,18 +38,21 @@ export class NumberSelector extends React.Component<INumberSelectorProps, any> {
     }
 
     onMinusClick = () => {
-        if (!this.props.isDisabled && this.selectedNumber > 1)
+        if (!this.props.isDisabled && this.selectedNumber > this.props.min)
             this.selectedNumber--;
     }
 
     onPlusClick = () => {
-        if (!this.props.isDisabled)
+        if (!this.props.isDisabled && this.selectedNumber < this.props.max)
             this.selectedNumber++;
     }
 }
 
 interface INumberSelectorProps {
-    selectedNumber:number;
+    label:string;
+    defaultValue:number;
+    min:number;
+    max:number;
     isDisabled:boolean;
     onSelectedNumberChange:(number) => void;
 }

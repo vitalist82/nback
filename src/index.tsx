@@ -32,6 +32,7 @@ export class Root extends React.Component<any, IRootState> {
             audioButtonState: ButtonState.None,
             positionButtonState: ButtonState.None,
             currentN: 2,
+            trialsCount: 24,
             gameResult: null };
         document.addEventListener("keydown", this.onKeyDown);
     }
@@ -49,10 +50,28 @@ export class Root extends React.Component<any, IRootState> {
                 { !this.state.isGameInProgress &&
                     <Header title={'Dual n-back'} />
                 }
-                { !this.state.isGameInProgress &&
-                    <NumberSelector selectedNumber={this.state.currentN} onSelectedNumberChange={this.onCurrentNChange} isDisabled={this.state.isGameInProgress} />
-                }
-                <Board className={`${this.state.isGameInProgress ? 'big' : ''}`} highlightedSquareIndex={this.state.highlightedSquareIndex}></Board>
+                <div className={'settings'}>
+                    { !this.state.isGameInProgress &&
+                        <NumberSelector
+                            label='n: '
+                            min={1}
+                            max={15}
+                            defaultValue={this.state.currentN}
+                            onSelectedNumberChange={this.onCurrentNChange}
+                            isDisabled={this.state.isGameInProgress} />
+                    }
+                    { !this.state.isGameInProgress &&
+                        <NumberSelector
+                            label='trials: '
+                            min={20}
+                            max={1000}
+                            defaultValue={this.state.trialsCount}
+                            onSelectedNumberChange={this.onTrialsCountChange}
+                            isDisabled={this.state.isGameInProgress} />
+                    }
+                </div>
+                <Board className={`${this.state.isGameInProgress ? 'big' : ''}`}
+                    highlightedSquareIndex={this.state.highlightedSquareIndex}></Board>
                 <div className={'result-buttons'}>
                     <ResultButton buttonState={this.state.positionButtonState} label='A: Position match' />
                     <ResultButton buttonState={this.state.audioButtonState} label='L: Audio match' />
@@ -69,7 +88,14 @@ export class Root extends React.Component<any, IRootState> {
 
     private startGame() {
         this.speech = new Speech(this.letters);
-        this.game = new Game(this.state.currentN, 24, 3000, this.letters, this.onBoardStateChange, this.onPlayerChoiceValidated, this.onGameEnded);
+        this.game = new Game(this.state.currentN,
+            this.state.trialsCount,
+            3000,
+            this.letters,
+            this.onBoardStateChange,
+            this.onPlayerChoiceValidated,
+            this.onGameEnded);
+            
         this.game.start();
         this.setState({ isGameInProgress: true });
     }
@@ -88,6 +114,10 @@ export class Root extends React.Component<any, IRootState> {
 
     onCurrentNChange = (currentN:number) => {
         this.setState({ currentN: currentN });
+    }
+
+    onTrialsCountChange = (trialsCount:number) => {
+        this.setState({ trialsCount: trialsCount });
     }
 
     onBoardStateChange = (boardState:BoardState) => {
@@ -131,5 +161,6 @@ export interface IRootState {
     audioButtonState:ButtonState;
     positionButtonState:ButtonState;
     currentN:number;
+    trialsCount:number;
     gameResult:GameResult;
 }
