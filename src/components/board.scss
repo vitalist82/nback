@@ -5,22 +5,42 @@ $thin-border: thin solid #555555;
     margin-right: auto;
     margin-top: 30px;
     margin-bottom: 30px;
-    width: 484px;
-    min-width: 484px;
+    width: 80vw;
+    max-width: 70vh;
+    height: 80vw;
+    max-height: 70vh;
+
+    &.big {
+        max-width: 80vh;
+        max-height: 80vh;
+    }
 }
 
 .square {
+    flex: 1 0 auto;
     background-color: white;
-    width: 160px;
-    height: 160px;
+    position: relative;
+}
+
+.square:after {
+    content: "";
+    float:left;
+    display: block;
+    padding-top: 100%;
 }
 
 .inner-square {
-    width: 100%;
-    height: 100%;
     opacity: 0;
     transition: opacity .5s ease-in-out;
     background-color: cadetblue;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .highlighted .inner-square {

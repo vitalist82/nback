@@ -52,7 +52,7 @@ export class Root extends React.Component<any, IRootState> {
                 { !this.state.isGameInProgress &&
                     <NumberSelector selectedNumber={this.state.currentN} onSelectedNumberChange={this.onCurrentNChange} isDisabled={this.state.isGameInProgress} />
                 }
-                <Board highlightedSquareIndex={this.state.highlightedSquareIndex}></Board>
+                <Board className={`${this.state.isGameInProgress ? 'big' : ''}`} highlightedSquareIndex={this.state.highlightedSquareIndex}></Board>
                 <div className={'result-buttons'}>
                     <ResultButton buttonState={this.state.positionButtonState} label='A: Position match' />
                     <ResultButton buttonState={this.state.audioButtonState} label='L: Audio match' />
