@@ -7,7 +7,7 @@ export class Board extends React.Component<IBoardProps, any> {
     
     render() {
         return(
-            <div className={'board ' + this.props.className}>
+            <div className={'board'}>
                 <div className={'row'}>
                     <BoardSquare index={0} highlighted={this.isHighlightedIndex(0)}></BoardSquare>
                     <BoardSquare index={1} highlighted={this.isHighlightedIndex(1)}></BoardSquare>
@@ -23,6 +23,7 @@ export class Board extends React.Component<IBoardProps, any> {
                     <BoardSquare index={7} highlighted={this.isHighlightedIndex(7)}></BoardSquare>
                     <BoardSquare index={8} highlighted={this.isHighlightedIndex(8)}></BoardSquare>
                 </div>
+                <div className={'overlay'}>Press space to start new game</div>
             </div>);
     }
 
@@ -33,5 +34,4 @@ export class Board extends React.Component<IBoardProps, any> {
 
 interface IBoardProps {
     highlightedSquareIndex:number;
-    className:string;
 }

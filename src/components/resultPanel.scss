@@ -3,5 +3,20 @@
     top: 156px;
     left: 150px;
     font-size: 18px;
-    font-weight: bold;
+
+    span {
+        line-height: 24px;
+    }
+
+    .total {
+        font-weight: bold;
+    }
+
+    span.label {
+        margin-right: 40px;
+    }
+
+    span.value {
+        float: right;
+    }
 }

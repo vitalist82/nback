@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
 }
 
 .settings {
@@ -13,11 +13,13 @@ body {
 .button-match {
     width: 217px;
     height: 40px;
-    border: thin solid #bbbbbb;
-    margin: 10px;
+    margin: 5px;
     display: inline-block;
-    color: #555555;
+    color: white;
+    background-color: #4382B0;
     font-size: x-large;
+    border-radius: 5px;
+    padding: 5px;
 
     .label {
         padding: 6px;
@@ -29,25 +31,39 @@ body {
     margin: auto;
     width: 480px;
 
+
     .button-match.error {
-        color: red;
+        background-color: rgb(202, 60, 60);
     }
 
     .button-match.success {
-        color: green;
+        background-color: rgb(28, 184, 65);
     }
 
     .button-match.pressed {
-        background-color: #bbbbbb;
-        color: #eeeeee;
+        background-color: #bbbbbbbb;
     }
 }
 
 .overlay {
+    opacity: 1;
     position: relative;
-    bottom: 50vh;
+    bottom: 34vh;
     text-align: center;
     font-size: 35px;
     color: #555555;
     text-shadow: grey -2px 2px 2px;
+    transition: opacity .5s ease-in-out;
+}
+
+.game-in-progress {
+    .overlay {
+        display: none;
+    }
+}
+
+@media screen and (max-height: 400px) {
+    .overlay {
+        opacity: 0;
+    }
 }

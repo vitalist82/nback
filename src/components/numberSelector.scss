@@ -8,25 +8,27 @@
         height: 30px;
         margin-right: 10px;
         text-align: center;
+        padding: 1px;
     }
 
     .n-selector-btn {
         width: 30px;
         height: 30px;
         cursor: pointer;
-        padding: 3px;
+        padding: 5px;
 
         .n-selector-btn-img {
-            width: 80%;
-            height: 80%;
+            width: 70%;
+            height: 70%;
             background-size: cover;
+            margin: auto;
 
             &.minus {
-                background-image: url('/media/icons/minus.svg');
+                background-image: url('/media/icons/down-arrow.svg');
             }
 
             &.plus {
-                background-image: url('/media/icons/plus.svg');
+                background-image: url('/media/icons/up-arrow.svg');
             }
         }
     }

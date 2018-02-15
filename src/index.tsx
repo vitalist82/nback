@@ -21,6 +21,8 @@ export class Root extends React.Component<any, IRootState> {
     private readonly letters:Array<string> = ['c', 'h', 'k', 'l', 'q', 'r', 's', 't'];
     private readonly displayTileDelayMs = 1000;
     private readonly highlightResultMs = 500;
+    private readonly defaultN = 2;
+    private readonly initialTrialsCount = 24;
 
     private game:Game;
     private speech:Speech;
@@ -31,8 +33,8 @@ export class Root extends React.Component<any, IRootState> {
             highlightedSquareIndex: -1,
             audioButtonState: ButtonState.None,
             positionButtonState: ButtonState.None,
-            currentN: 2,
-            trialsCount: 24,
+            currentN: this.defaultN,
+            trialsCount: this.initialTrialsCount,
             gameResult: null };
         document.addEventListener("keydown", this.onKeyDown);
     }
@@ -46,43 +48,70 @@ export class Root extends React.Component<any, IRootState> {
 
     render() {
         return (
-            <div className={'root'}>
-                { !this.state.isGameInProgress &&
-                    <Header title={'Dual n-back'} />
-                }
-                <div className={'settings'}>
-                    { !this.state.isGameInProgress &&
-                        <NumberSelector
-                            label='n: '
-                            min={1}
-                            max={15}
-                            defaultValue={this.state.currentN}
-                            onSelectedNumberChange={this.onCurrentNChange}
-                            isDisabled={this.state.isGameInProgress} />
-                    }
-                    { !this.state.isGameInProgress &&
-                        <NumberSelector
-                            label='trials: '
-                            min={20}
-                            max={1000}
-                            defaultValue={this.state.trialsCount}
-                            onSelectedNumberChange={this.onTrialsCountChange}
-                            isDisabled={this.state.isGameInProgress} />
-                    }
-                </div>
-                <Board className={`${this.state.isGameInProgress ? 'big' : ''}`}
-                    highlightedSquareIndex={this.state.highlightedSquareIndex}></Board>
-                <div className={'result-buttons'}>
-                    <ResultButton buttonState={this.state.positionButtonState} label='A: Position match' />
-                    <ResultButton buttonState={this.state.audioButtonState} label='L: Audio match' />
-                </div>
-                { this.displayResult() &&
-                    <ResultPanel result={this.state.gameResult} />
-                }
-                { !this.state.isGameInProgress &&
-                    <div className={'overlay'}>Press space to start new game</div>
-                }
+            <div className={`root ${this.state.isGameInProgress ? 'game-in-progress' : ''}`}>
+                {this.renderHeader()}
+                {this.renderSettings()}
+                {this.renderBoard()}
+                {this.renderButtons()}
+                {this.renderResultPanel()}
             </div>
+        );
+    }
+
+    private renderHeader():JSX.Element {
+        if (this.state.isGameInProgress)
+            return null;
+
+        return (
+            <Header title={'Dual n-back'} />
+        );
+    }
+
+    private renderSettings():JSX.Element {
+        if (this.state.isGameInProgress)
+            return null;
+
+        return (
+            <div className={'settings'}>
+                <NumberSelector
+                    label='n: '
+                    min={1}
+                    max={15}
+                    defaultValue={this.state.currentN}
+                    onSelectedNumberChange={this.onCurrentNChange}
+                    isDisabled={this.state.isGameInProgress} />
+                <NumberSelector
+                    label='trials: '
+                    min={20}
+                    max={1000}
+                    defaultValue={this.state.trialsCount}
+                    onSelectedNumberChange={this.onTrialsCountChange}
+                    isDisabled={this.state.isGameInProgress} />
+            </div>
+        );
+    }
+
+    private renderBoard():JSX.Element {
+        return (
+            <Board highlightedSquareIndex={this.state.highlightedSquareIndex}></Board>
+        );
+    }
+
+    private renderButtons():JSX.Element {
+        return (
+            <div className={'result-buttons'}>
+                <ResultButton buttonState={this.state.positionButtonState} label='A: Position match' />
+                <ResultButton buttonState={this.state.audioButtonState} label='L: Audio match' />
+            </div>
+        );
+    }
+
+    private renderResultPanel():JSX.Element {
+        if (this.state.isGameInProgress || this.state.gameResult == null)
+            return null;
+
+        return (
+            <ResultPanel result={this.state.gameResult} />
         );
     }
 
@@ -106,10 +135,6 @@ export class Root extends React.Component<any, IRootState> {
 
     private setPositionButtonState(buttonState:ButtonState) {
         this.setState({ positionButtonState: buttonState });
-    }
-
-    private displayResult():boolean {
-        return !this.state.isGameInProgress && this.state.gameResult != null;
     }
 
     onCurrentNChange = (currentN:number) => {

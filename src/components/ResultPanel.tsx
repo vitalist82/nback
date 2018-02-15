@@ -16,7 +16,7 @@ export const ResultPanel: React.SFC<IResultPanelProps> = (props) => {
             <div className={'position'}>
                 <span className={'label'}>Position match: </span><span className={'value'}>{props.result.positionMatchPercentage + '%'}</span>
             </div>
-            <div className={'all'}>
+            <div className={'total'}>
                 <span className={'label'}>Total: </span><span className={'value'}>{props.result.generalMatchPercentage + '%'}</span>
             </div>
         </div>
