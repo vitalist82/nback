@@ -49,7 +49,6 @@ module.exports = {
             { from: "./src/index.html" },
             { from: "./node_modules/react/umd/react.development.js" },
             { from: "./node_modules/react-dom/umd/react-dom.development.js" },
-            { from: "./node_modules/howler/dist/howler.min.js" },
             { from: "./media/", to: "media" }
         ]),
         new ExtractTextPlugin("styles.css"),

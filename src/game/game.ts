@@ -8,6 +8,9 @@ import { GameResult } from "../valueObjects/gameResult";
 export class Game {
 
     private readonly displayResultDelay:number = 500;
+    private readonly randomnessPercentageTreshold: number = 35;
+    private readonly positionRandomTreshold:number = 0.4;
+    private readonly audioRandomTreshold:number = 0.8;
 
     private n:number;
     private gameHistory:GameHistory;
@@ -70,14 +73,11 @@ export class Game {
         this.resetChoice();
         this.gameHistory.reset();
 
-        await this.executeDelayed(this.displayResultDelay, this.generateState);
-
-        let count = 1;
+        let count = 0;
         while (count++ < this.gameLength) {
-            await this.executeDelayed(this.intervalLength, this.processChoice);
             await this.executeDelayed(this.displayResultDelay, this.generateState);
+            await this.executeDelayed(this.intervalLength, this.processChoice);
         }
-        await this.executeDelayed(this.intervalLength, this.processChoice);
         this.isGameInProgress = false;
         this.onGameEnded(this.getGameResult());
     }
@@ -154,8 +154,48 @@ export class Game {
         this.playerChoice = null;
     }
 
+    /**
+    * By default, randomly generated states are matching only rarely, which makes it easy to get over 80%
+    * without user interaction.
+    * To increase the match percentage, we are checking previous states and if the percentage of matches of previous states
+    * is below the specified treshold, the newly generated state will be only partly random, or not random at all.
+    * It will have the same position, audio or both of a 'n-previous' state.
+    **/
+    private getMatchPercentage():number {
+        let boardStates = this.gameHistory.boardStates;
+        if (boardStates.length < this.n)
+            return 100;
+        
+        let matches = 0;
+        for (let i = this.n; i < boardStates.length; i++) {
+            if (boardStates[i].squareIndex === boardStates[i-this.n].squareIndex)
+                matches++;
+            if (boardStates[i].symbol === boardStates[i-this.n].symbol)
+                matches++;
+        }
+        return matches / boardStates.length / 2 * 100;
+    }
+
+    private generatePseudoRandomState():BoardState {
+        let randomValue = Math.random();
+        let nPreviousBoardState = this.gameHistory.boardStates[this.gameHistory.boardStates.length - this.n];
+        // previous position
+        if (randomValue < this.positionRandomTreshold)
+            return new BoardState(nPreviousBoardState.squareIndex, this.getRandomSymbol());
+        // previous symbol
+        else if (randomValue < this.audioRandomTreshold)
+            return new BoardState(this.getRandomPosition(), nPreviousBoardState.symbol);
+        // previous position and symbol
+        else
+            return new BoardState(nPreviousBoardState.squareIndex, nPreviousBoardState.symbol);
+    }
+
     private generateState = () => {
-        this.currentState = new BoardState(this.getRandomPosition(), this.getRandomSymbol());
+        if (this.gameHistory.boardStates.length >= this.n && this.getMatchPercentage() < this.randomnessPercentageTreshold)
+            this.currentState = this.generatePseudoRandomState();
+        else
+            this.currentState = new BoardState(this.getRandomPosition(), this.getRandomSymbol());
+
     }
 
     private getRandomPosition():number {

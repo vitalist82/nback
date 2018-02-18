@@ -36,6 +36,8 @@ export class Root extends React.Component<any, IRootState> {
             currentN: this.defaultN,
             trialsCount: this.initialTrialsCount,
             gameResult: null };
+        
+        this.speech = new Speech(this.letters);
         document.addEventListener("keydown", this.onKeyDown);
     }
 
@@ -93,15 +95,15 @@ export class Root extends React.Component<any, IRootState> {
 
     private renderBoard():JSX.Element {
         return (
-            <Board highlightedSquareIndex={this.state.highlightedSquareIndex}></Board>
+            <Board highlightedSquareIndex={this.state.highlightedSquareIndex} onClicked={this.startGame}></Board>
         );
     }
 
     private renderButtons():JSX.Element {
         return (
             <div className={'result-buttons'}>
-                <ResultButton buttonState={this.state.positionButtonState} label='A: Position match' />
-                <ResultButton buttonState={this.state.audioButtonState} label='L: Audio match' />
+                <ResultButton buttonState={this.state.positionButtonState} label='A: Position match' onClicked={this.onLocationClicked}/>
+                <ResultButton buttonState={this.state.audioButtonState} label='L: Audio match' onClicked={this.onAudioClicked}/>
             </div>
         );
     }
@@ -115,8 +117,10 @@ export class Root extends React.Component<any, IRootState> {
         );
     }
 
-    private startGame() {
-        this.speech = new Speech(this.letters);
+    private startGame = () => {
+        if (this.state.isGameInProgress)
+            return;
+
         this.game = new Game(this.state.currentN,
             this.state.trialsCount,
             3000,
@@ -135,6 +139,20 @@ export class Root extends React.Component<any, IRootState> {
 
     private setPositionButtonState(buttonState:ButtonState) {
         this.setState({ positionButtonState: buttonState });
+    }
+
+    private selectAudio() {
+        if (!this.state.isGameInProgress)
+            return;
+        this.game.addChoice(UserInput.Audio);
+        this.setAudioButtonState(ButtonState.Pressed);
+    }
+
+    private selectLocation() {
+        if (!this.state.isGameInProgress)
+            return;
+        this.game.addChoice(UserInput.Position);
+        this.setPositionButtonState(ButtonState.Pressed);
     }
 
     onCurrentNChange = (currentN:number) => {
@@ -161,16 +179,20 @@ export class Root extends React.Component<any, IRootState> {
         this.setState({ isGameInProgress: false, gameResult: gameResult });
     }
 
+    onAudioClicked = () => {
+        this.selectAudio();
+    }
+
+    onLocationClicked = () => {
+        this.selectLocation();
+    }
+
     onKeyDown = (e:KeyboardEvent) => {
-        if (this.state.isGameInProgress && e.key == 'l') {
-            this.game.addChoice(UserInput.Audio);
-            this.setAudioButtonState(ButtonState.Pressed);
-        }
-        else if (this.state.isGameInProgress && e.key == 'a') {
-            this.game.addChoice(UserInput.Position);
-            this.setPositionButtonState(ButtonState.Pressed);
-        }
-        else if (!this.state.isGameInProgress && (e.key == ' ' || e.key == 'Spacebar')) {
+        if (e.key == 'l')
+            this.selectAudio();
+        else if (e.key == 'a')
+            this.selectLocation();
+        else if (e.key == ' ' || e.key == 'Spacebar') {
             this.startGame();
         }
     }

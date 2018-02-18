@@ -3,6 +3,7 @@
     font-size: 24px;
     margin-left: 10px;
     margin-right: 30px;
+    color: #555555;
 
     .n-selector-label {
         height: 30px;
@@ -22,13 +23,27 @@
             height: 70%;
             background-size: cover;
             margin: auto;
+        }
 
-            &.minus {
+        &.minus {
+            .n-selector-btn-img {
                 background-image: url('/media/icons/down-arrow.svg');
             }
+            &:hover {
+                .n-selector-btn-img {
+                    background-image: url('/media/icons/down-arrow-full.svg');
+                }
+            }
+        }
 
-            &.plus {
+        &.plus {
+            .n-selector-btn-img {
                 background-image: url('/media/icons/up-arrow.svg');
+            }
+            &:hover {
+                .n-selector-btn-img {
+                    background-image: url('/media/icons/up-arrow-full.svg');
+                }
             }
         }
     }

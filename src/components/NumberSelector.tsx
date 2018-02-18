@@ -30,19 +30,21 @@ export class NumberSelector extends React.Component<INumberSelectorProps, any> {
         return (
             <div className={'n-selector'}>
                 <div className={'n-selector-label'}>{this.props.label}</div>
-                <div className={'n-selector-btn'} onClick={this.onMinusClick}><div className={'n-selector-btn-img minus'}></div></div>
+                <div className={'n-selector-btn minus'} onClick={this.onMinusClick}><div className={'n-selector-btn-img'}></div></div>
                 <div className={'n-selector-number-label'}>{this.state.selectedNumber}</div>
-                <div className={'n-selector-btn'} onClick={this.onPlusClick}><div className={'n-selector-btn-img plus'}></div></div>
+                <div className={'n-selector-btn plus'} onClick={this.onPlusClick}><div className={'n-selector-btn-img'}></div></div>
             </div>
         );
     }
 
-    onMinusClick = () => {
+    onMinusClick = (e:any) => {
+        e.stopPropagation();
         if (!this.props.isDisabled && this.selectedNumber > this.props.min)
             this.selectedNumber--;
     }
 
-    onPlusClick = () => {
+    onPlusClick = (e:any) => {
+        e.stopPropagation();
         if (!this.props.isDisabled && this.selectedNumber < this.props.max)
             this.selectedNumber++;
     }

@@ -30,6 +30,7 @@ body {
 .result-buttons {
     margin: auto;
     width: 480px;
+    cursor: pointer;
 
 
     .button-match.error {
@@ -45,25 +46,8 @@ body {
     }
 }
 
-.overlay {
-    opacity: 1;
-    position: relative;
-    bottom: 34vh;
-    text-align: center;
-    font-size: 35px;
-    color: #555555;
-    text-shadow: grey -2px 2px 2px;
-    transition: opacity .5s ease-in-out;
-}
-
 .game-in-progress {
     .overlay {
         display: none;
-    }
-}
-
-@media screen and (max-height: 400px) {
-    .overlay {
-        opacity: 0;
     }
 }

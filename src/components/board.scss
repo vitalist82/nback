@@ -76,4 +76,11 @@ $thin-border: thin solid #555555;
     color: #555555;
     text-shadow: grey -2px 2px 2px;
     transition: opacity .5s ease-in-out;
+    cursor: pointer;
+}
+
+@media screen and (max-height: 400px) {
+    .overlay {
+        opacity: 0;
+    }
 }
