@@ -102,8 +102,8 @@ export class Root extends React.Component<any, IRootState> {
     private renderButtons():JSX.Element {
         return (
             <div className={'result-buttons'}>
-                <ResultButton buttonState={this.state.positionButtonState} label='A: Position match' onClicked={this.onLocationClicked}/>
-                <ResultButton buttonState={this.state.audioButtonState} label='L: Audio match' onClicked={this.onAudioClicked}/>
+                <ResultButton className={'position'} buttonState={this.state.positionButtonState} label='A: Position match' onClicked={this.onLocationClicked}/>
+                <ResultButton className={'audio'} buttonState={this.state.audioButtonState} label='L: Audio match' onClicked={this.onAudioClicked}/>
             </div>
         );
     }

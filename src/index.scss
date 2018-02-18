@@ -10,28 +10,56 @@ body {
     width: 354px;
 }
 
-.button-match {
-    width: 217px;
-    height: 40px;
-    margin: 5px;
-    display: inline-block;
-    color: white;
-    background-color: #4382B0;
-    font-size: x-large;
-    border-radius: 5px;
-    padding: 5px;
-
-    .label {
-        padding: 6px;
-        text-align: center;
-    }
-}
-
 .result-buttons {
     margin: auto;
     width: 480px;
     cursor: pointer;
+    position: relative;
 
+    .button-match {
+        width: 217px;
+        height: 40px;
+        margin: 5px;
+        display: inline-block;
+        color: white;
+        background-color: #4382B0;
+        font-size: 24px;
+        border-radius: 5px;
+        padding: 5px;
+        position: absolute;
+        transition: all .1s ease-in-out;
+
+        &.position {
+            left: 0;
+            top: 0;
+
+            &:hover {
+                left: -2px;
+                top: -2px;
+                width: 222px;
+                height: 42px;
+                font-size: 25px;
+            }
+        }
+
+        &.audio {
+            left: 245px;
+            top: 0;
+
+            &:hover {
+                left: 243px;
+                top: -2px;
+                width: 222px;
+                height: 42px;
+                font-size: 25px;
+            }
+        }
+    
+        .label {
+            padding: 6px;
+            text-align: center;
+        }
+    }
 
     .button-match.error {
         background-color: rgb(202, 60, 60);

@@ -15,7 +15,6 @@ $thin-border: thin solid #555555;
     .board {
         max-width: 80vh;
         max-height: 80vh;
-        margin-bottom: 50px;
     }
 }
 
@@ -34,7 +33,7 @@ $thin-border: thin solid #555555;
 
 .inner-square {
     opacity: 0;
-    transition: opacity .5s ease-in-out;
+    transition: all .5s ease-in-out;
     background-color: #4382B0;
     position: absolute;
     left: 0;
@@ -76,7 +75,12 @@ $thin-border: thin solid #555555;
     color: #555555;
     text-shadow: grey -2px 2px 2px;
     transition: opacity .5s ease-in-out;
+    transition: text-shadow .1s ease-in-out;
     cursor: pointer;
+
+    &:hover {
+        text-shadow: grey -3px 3px 3px;
+    }
 }
 
 @media screen and (max-height: 400px) {

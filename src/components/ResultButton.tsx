@@ -13,19 +13,20 @@ export class ResultButton extends React.Component<IButtonProps, any> {
     }
 
     private getClassName():string {
-        let stateClassName = "";
+        let stateClassName = '';
         if (this.props.buttonState == ButtonState.Pressed)
-            stateClassName = " pressed";
+            stateClassName = 'pressed';
         else if (this.props.buttonState == ButtonState.Success)
-            stateClassName = " success";
+            stateClassName = 'success';
         else if (this.props.buttonState == ButtonState.Error)
-            stateClassName = " error";
-        return "button-match" + stateClassName;
+            stateClassName = 'error';
+        return `${this.props.className} button-match ${stateClassName}`;
     }
 }
 
 interface IButtonProps {
     label:string;
     buttonState:ButtonState;
+    className:string;
     onClicked:() => void;
 }
