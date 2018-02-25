@@ -133,21 +133,14 @@ export class Game {
     private getGameResult():GameResult {
         let audioMatches:number = 0;
         let positionMatches:number = 0;
-        let allMatches:number = 0;
         for (let match of this.gameHistory.matches) {
-            if (match.soundMatch) {
+            if (match.soundMatch)
                 audioMatches++;
-                allMatches++;
-            }
-            if (match.positionMatch) {
+
+            if (match.positionMatch)
                 positionMatches++;
-                allMatches++;
-            }
         }
-        return new GameResult(
-            Math.round(audioMatches / this.gameLength * 1000) / 10,
-            Math.round(positionMatches / this.gameLength * 1000) / 10,
-            Math.round(allMatches / this.gameLength / 2 * 1000) / 10);
+        return new GameResult(this.gameLength, audioMatches, positionMatches);
     }
 
     private resetChoice() {

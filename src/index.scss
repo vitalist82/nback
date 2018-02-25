@@ -10,54 +10,74 @@ body {
     width: 354px;
 }
 
-.result-buttons {
+@mixin two-buttons-container() {
     margin: auto;
     width: 480px;
     cursor: pointer;
     position: relative;
+}
+
+@mixin button() {
+    width: 217px;
+    height: 40px;
+    margin: 5px;
+    display: inline-block;
+    color: white;
+    background-color: #4382B0;
+    font-size: 24px;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    transition: all .1s ease-in-out;
+}
+
+@mixin button-left() {
+    left: 0;
+    top: 0;
+
+    &:hover {
+        left: -2px;
+        top: -2px;
+        width: 222px;
+        height: 42px;
+        font-size: 25px;
+    }
+}
+
+@mixin button-right() {
+    left: 245px;
+    top: 0;
+
+    &:hover {
+        left: 243px;
+        top: -2px;
+        width: 222px;
+        height: 42px;
+        font-size: 25px;
+    }
+}
+
+@mixin button-label() {
+    padding: 6px;
+    text-align: center;
+}
+
+.action-buttons {
+    @include two-buttons-container();
 
     .button-match {
-        width: 217px;
-        height: 40px;
-        margin: 5px;
-        display: inline-block;
-        color: white;
-        background-color: #4382B0;
-        font-size: 24px;
-        border-radius: 5px;
-        padding: 5px;
-        position: absolute;
-        transition: all .1s ease-in-out;
+        @include button();
 
         &.position {
-            left: 0;
-            top: 0;
-
-            &:hover {
-                left: -2px;
-                top: -2px;
-                width: 222px;
-                height: 42px;
-                font-size: 25px;
-            }
+            @include button-left();
         }
 
         &.audio {
-            left: 245px;
-            top: 0;
-
-            &:hover {
-                left: 243px;
-                top: -2px;
-                width: 222px;
-                height: 42px;
-                font-size: 25px;
-            }
+            @include button-right();
         }
     
         .label {
-            padding: 6px;
-            text-align: center;
+            @include button-label();
         }
     }
 
@@ -71,6 +91,28 @@ body {
 
     .button-match.pressed {
         background-color: #bbbbbbbb;
+    }
+}
+
+.result-buttons {
+    @include two-buttons-container();
+
+    .button {
+        @include button();
+
+        &.cancel {
+            @include button-left();
+            background-color: rgb(202, 60, 60);
+        }
+    
+        &.continue {
+            @include button-right();
+            background-color: rgb(28, 184, 65);
+        }
+    
+        .label {
+            @include button-label();
+        }
     }
 }
 

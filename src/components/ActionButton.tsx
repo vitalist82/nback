@@ -1,18 +1,11 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { ButtonState } from "../enums/buttonState";
+import { ButtonBase, IButtonBaseProps } from "./ButtonBase";
 
-export class ResultButton extends React.Component<IButtonProps, any> {
-    
-    render() {
-        return (
-            <div className={this.getClassName()}>
-                <div className={'label'} onClick={this.props.onClicked}>{this.props.label}</div>
-            </div>
-        );
-    }
+export class ActionButton extends ButtonBase<IActionButtonProps> {
 
-    private getClassName():string {
+    getClassName():string {
         let stateClassName = '';
         if (this.props.buttonState == ButtonState.Pressed)
             stateClassName = 'pressed';
@@ -24,9 +17,6 @@ export class ResultButton extends React.Component<IButtonProps, any> {
     }
 }
 
-interface IButtonProps {
-    label:string;
+interface IActionButtonProps extends IButtonBaseProps {
     buttonState:ButtonState;
-    className:string;
-    onClicked:() => void;
 }

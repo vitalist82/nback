@@ -10,14 +10,29 @@ export const ResultPanel: React.SFC<IResultPanelProps> = (props) => {
     
     return(
         <div className={'result-panel'}>
-            <div className={'audio'}>
-                <span className={'label'}>Audio match: </span><span className={'value'}>{props.result.audioMatchPercentage + '%'}</span>
+            <div className={'row'}>
+                <div className={'cell'}></div>
+                <div className={'cell label'}>Audio</div>
+                <div className={'cell label'}>Position</div>
+                <div className={'cell label'}>Total</div>
             </div>
-            <div className={'position'}>
-                <span className={'label'}>Position match: </span><span className={'value'}>{props.result.positionMatchPercentage + '%'}</span>
+            <div className={'row'}>
+                <div className={'cell left'}>Matches: </div>
+                <div className={'cell label'}>{props.result.audioMatchCount}</div>
+                <div className={'cell label'}>{props.result.positionMatchCount}</div>
+                <div className={'cell label'}>{props.result.audioMatchCount + props.result.positionMatchCount}</div>
             </div>
-            <div className={'total'}>
-                <span className={'label'}>Total: </span><span className={'value'}>{props.result.generalMatchPercentage + '%'}</span>
+            <div className={'row'}>
+                <div className={'cell left'}>Misses: </div>
+                <div className={'cell label'}>{props.result.audioMissCount}</div>
+                <div className={'cell label'}>{props.result.positionMissCount}</div>
+                <div className={'cell label'}>{props.result.audioMissCount + props.result.positionMissCount}</div>
+            </div>
+            <div className={'row'}>
+                <div className={'cell'}></div>
+                <div className={'cell label'}>{props.result.audioMatchPercentage}%</div>
+                <div className={'cell label'}>{props.result.positionMatchPercentage}%</div>
+                <div className={'cell label bold'}>{props.result.generalMatchPercentage}%</div>
             </div>
         </div>
     );

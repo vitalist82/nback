@@ -2,6 +2,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const Path = require('path');
 
+const isProduction = process.argv.indexOf('-p') >= 0;
 const outPath = Path.resolve(__dirname, 'dist');
 const sourcePath = Path.resolve(__dirname, 'src');
 const extractSass = new ExtractTextPlugin({
@@ -17,7 +18,7 @@ module.exports = {
     },
 
     // Enable sourcemaps for debugging webpack's output.
-    devtool: "source-map",
+    devtool: isProduction ? "none" : "source-map",
 
     resolve: {
         extensions: [".ts", ".tsx", ".js", ".json"]
@@ -33,7 +34,10 @@ module.exports = {
 
             { test: /\.scss?$/, use: extractSass.extract({
                     use: [{
-                        loader: "css-loader"
+                        loader: "css-loader",
+                        query: {
+                            sourceMap: !isProduction
+                          }
                     }, {
                         loader: "sass-loader"
                     }],
@@ -47,8 +51,8 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin([
             { from: "./src/index.html" },
-            { from: "./node_modules/react/umd/react.development.js" },
-            { from: "./node_modules/react-dom/umd/react-dom.development.js" },
+            { from: "./node_modules/react/umd/react.production.min.js" },
+            { from: "./node_modules/react-dom/umd/react-dom.production.min.js" },
             { from: "./media/", to: "media" }
         ]),
         new ExtractTextPlugin("styles.css"),

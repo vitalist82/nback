@@ -9,12 +9,13 @@ import { BoardState } from "./valueObjects/boardState";
 import { Match } from "./game/match";
 import { UserInput } from "./enums/userInput";
 import { Speech } from "./speech/speech";
-import { ResultButton } from "./components/ResultButton";
+import { ActionButton } from "./components/ActionButton";
 import { ButtonState } from "./enums/buttonState";
 import { NumberSelector } from "./components/NumberSelector";
 import { Header } from "./components/Header";
 import { ResultPanel } from "./components/ResultPanel";
 import { GameResult } from "./valueObjects/gameResult";
+import { Button } from "./components/Button";
 
 export class Root extends React.Component<any, IRootState> {
 
@@ -22,7 +23,11 @@ export class Root extends React.Component<any, IRootState> {
     private readonly displayTileDelayMs = 1000;
     private readonly highlightResultMs = 500;
     private readonly defaultN = 2;
+    private readonly minN = 1;
+    private readonly maxN = 15;
     private readonly initialTrialsCount = 24;
+    private readonly minTrialsCount = 20;
+    private readonly maxTrialsCount = 1000;
 
     private game:Game;
     private speech:Speech;
@@ -53,9 +58,9 @@ export class Root extends React.Component<any, IRootState> {
             <div className={`root ${this.state.isGameInProgress ? 'game-in-progress' : ''}`}>
                 {this.renderHeader()}
                 {this.renderSettings()}
+                {this.renderResultPanel()}
                 {this.renderBoard()}
                 {this.renderButtons()}
-                {this.renderResultPanel()}
             </div>
         );
     }
@@ -77,15 +82,15 @@ export class Root extends React.Component<any, IRootState> {
             <div className={'settings'}>
                 <NumberSelector
                     label='n: '
-                    min={1}
-                    max={15}
+                    min={this.minN}
+                    max={this.maxN}
                     defaultValue={this.state.currentN}
                     onSelectedNumberChange={this.onCurrentNChange}
                     isDisabled={this.state.isGameInProgress} />
                 <NumberSelector
                     label='trials: '
-                    min={20}
-                    max={1000}
+                    min={this.minTrialsCount}
+                    max={this.maxTrialsCount}
                     defaultValue={this.state.trialsCount}
                     onSelectedNumberChange={this.onTrialsCountChange}
                     isDisabled={this.state.isGameInProgress} />
@@ -94,16 +99,22 @@ export class Root extends React.Component<any, IRootState> {
     }
 
     private renderBoard():JSX.Element {
+        if (this.state.gameResult != null)
+            return null;
+
         return (
             <Board highlightedSquareIndex={this.state.highlightedSquareIndex} onClicked={this.startGame}></Board>
         );
     }
 
     private renderButtons():JSX.Element {
+        if (this.state.gameResult != null)
+            return null;
+
         return (
-            <div className={'result-buttons'}>
-                <ResultButton className={'position'} buttonState={this.state.positionButtonState} label='A: Position match' onClicked={this.onLocationClicked}/>
-                <ResultButton className={'audio'} buttonState={this.state.audioButtonState} label='L: Audio match' onClicked={this.onAudioClicked}/>
+            <div className={'action-buttons'}>
+                <ActionButton className={'position'} buttonState={this.state.positionButtonState} label='A: Position match' onClicked={this.onLocationClicked}/>
+                <ActionButton className={'audio'} buttonState={this.state.audioButtonState} label='L: Audio match' onClicked={this.onAudioClicked}/>
             </div>
         );
     }
@@ -113,7 +124,13 @@ export class Root extends React.Component<any, IRootState> {
             return null;
 
         return (
-            <ResultPanel result={this.state.gameResult} />
+            <div>
+                <ResultPanel result={this.state.gameResult} />
+                <div className='result-buttons'>
+                    <Button className={'button cancel'} label='Cancel' onClicked={this.reset}/>
+                    <Button className={'button continue'} label='Continue' onClicked={this.startGame}/>
+                </div>
+            </div>
         );
     }
 
@@ -130,7 +147,12 @@ export class Root extends React.Component<any, IRootState> {
             this.onGameEnded);
             
         this.game.start();
-        this.setState({ isGameInProgress: true });
+        this.setState({ isGameInProgress: true, gameResult: null });
+    }
+
+    private reset = () => {
+        this.setState({ isGameInProgress: false, gameResult: null, audioButtonState: ButtonState.None,
+            positionButtonState: ButtonState.None, highlightedSquareIndex: -1});
     }
 
     private setAudioButtonState(buttonState:ButtonState) {
